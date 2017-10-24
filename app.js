@@ -21,20 +21,19 @@ function serveStaticFile(response, path, contentType, responseCode) {
 http.createServer( function(request, response){
 
 	var normalizedPath = stripQuerystringAndTrailingSlash(request.url).toLowerCase();
-	console.log(normalizedPath);
 
 	switch (normalizedPath) {
 		case '':
-			serveStaticFile(response, '/public/home.html', 'text/html');
+			serveStaticFile(response, '/src/home.html', 'text/html');
 			break;
 		case '/about':
-			serveStaticFile(response, '/public/about.html', 'text/html');
+			serveStaticFile(response, '/src/about.html', 'text/html');
 			break;
 		case '/img/logo.jpg':
-			serveStaticFile(response, '/public/img/logo.jpg', 'image/jpeg');
+			serveStaticFile(response, '/src/img/logo.jpg', 'image/jpeg');
 			break;
 		default:
-			serveStaticFile(response, '/public/404.html', 'text/html', 400);
+			serveStaticFile(response, '/src/404.html', 'text/html', 400);
 			break;
 	}
 }).listen(3000);
