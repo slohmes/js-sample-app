@@ -1,46 +1,37 @@
 "use strict";
 
-var http = require('http'),
-fs = require('fs');
+var express = require('express');
 
-function serveStaticFile(response, path, contentType, responseCode) {
-	if(!responseCode) responseCode = 200;
+var app = express();
 
-	// asynchronously reads file & executes callback function
-	fs.readFile(__dirname + path, function(error, data) {
-		if (error) {
-			response.writeHead(500, { 'Content-Type': 'text/plain' });
-			response.end('500 - Internal Error');
-		} else {
-			response.writeHead(responseCode, { 'Content-Type': contentType });
-			response.end(data);
-		}
-	});
-}
+app.set('port', process.env.PORT || 3000);
 
-http.createServer( function(request, response){
+app.get('/', function(request, response) {
+	response.type('text/plain');
+	response.send('Slohmes! The official website of Sarah Lohmeier.');
+});
 
-	var normalizedPath = stripQuerystringAndTrailingSlash(request.url).toLowerCase();
+app.get('/about', function(request, response) {
+	response.type('text/plain');
+	response.send('About Sarah');
+});
 
-	switch (normalizedPath) {
-		case '':
-			serveStaticFile(response, '/src/home.html', 'text/html');
-			break;
-		case '/about':
-			serveStaticFile(response, '/src/about.html', 'text/html');
-			break;
-		case '/img/logo.jpg':
-			serveStaticFile(response, '/src/img/logo.jpg', 'image/jpeg');
-			break;
-		default:
-			serveStaticFile(response, '/src/404.html', 'text/html', 400);
-			break;
-	}
-}).listen(3000);
+// custom 404 page
+app.use(function(request, response) {
+	response.type('text/plain');
+	response.status(404);
+	response.send('404 - Not Found');
+});
 
-console.log('Server started on localhost:3000; press Ctrl+c to terminate...');
+// custom 500 page
+app.use(function(error, request, response, next) {
+	console.error(error.stack);
+	response.type('text/plain');
+	response.status(500);
+	response.send('500 - Server Error');
+});
 
+app.listen(app.get('port'), function () {
+	console.log( 'Express started on http://localhost:' + app.get('port') + '; press Ctrl + c to terminate.');
 
-function stripQuerystringAndTrailingSlash(path) {
-	return path.replace(/\/?(?:\?.*)?$/, '');
-}
+});
