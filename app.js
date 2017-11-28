@@ -1,14 +1,15 @@
 "use strict";
 
 var express = require('express');
+var path = require('path');
 
 var app = express();
 
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', function(request, response) {
-	response.type('text/plain');
-	response.send('Slohmes! The official website of Sarah Lohmeier.');
+	response.type('text/html');
+	response.sendFile(path.join(__dirname+'/index.html'));
 });
 
 app.get('/about', function(request, response) {
