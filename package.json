@@ -4,6 +4,7 @@
   "description": "A learning-by-doing exploration of the JS ecosystem.",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "node test.js"
   },
   "repository": {
