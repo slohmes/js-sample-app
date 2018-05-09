@@ -2,8 +2,11 @@
 
 var express = require('express');
 var path = require('path');
+var generatePage = require('./src/server-side.js');
 
 var app = express();
+
+app.use(express.static(__dirname + '/src'));
 
 app.set('port', process.env.PORT || 3000);
 
@@ -15,6 +18,17 @@ app.get('/', function(request, response) {
 app.get('/about', function(request, response) {
 	response.type('text/plain');
 	response.send('About Sarah');
+});
+
+app.get('/server-side', function(req, res, next) {
+
+	generatePage()
+	.then((page) => {
+		res.type('text/html');
+		res.send(page);
+	})
+	.catch(next);
+
 });
 
 // custom 404 page
